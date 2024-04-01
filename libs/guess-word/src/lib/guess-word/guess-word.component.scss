@@ -1,0 +1,67 @@
+.guess-word {
+  width: 800px;
+  margin: 0 auto;
+
+  .text-center {
+    text-align: center;
+  }
+}
+
+.letters {
+  min-height: 100px;
+  background: #f3f4f6;
+  width: 100%;
+  display: flex;
+  padding: 0 1rem;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 0.5rem;
+
+  .letter {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    input {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.exclude-letters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.result {
+  margin-top: 1rem;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+
+  }
+}
+
+.answer {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  background: #d0e1fd;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  white-space: pre-line;
+}
+
+.error {
+  background-color: #fad3e7;
+  color: #a5326b;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}

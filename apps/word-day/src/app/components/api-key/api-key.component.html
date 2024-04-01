@@ -1,0 +1,25 @@
+<h3>Enter API Key</h3>
+
+<div class="api-key-form">
+  <form [formGroup]="form">
+    <div class="form-row" >
+      <div class="form-field">
+        <div class="form-control">
+          <input pInputText formControlName="apiKey">
+        </div>
+      </div>
+    </div>
+    <div class="form-row form-row--buttons">
+      <div class="form-field">
+        <button
+          class="api-key-form__submit"
+          pButton
+          type="submit"
+          label="Add Key"
+          [disabled]="form.invalid"
+          (click)="save()"></button>
+      </div>
+    </div>
+
+  </form>
+</div>

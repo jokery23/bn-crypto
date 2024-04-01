@@ -1,0 +1,132 @@
+<div class="guess-word">
+  <h2 class="text-center">Guess Word Helper</h2>
+  <form [formGroup]="form">
+    <div class="form-row">
+      <div class="form-field">
+        <label class="form-label">Description</label>
+        <div class="form-control">
+          <textarea pInputTextarea formControlName="context"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="form-field">
+        <label class="form-label">Count of Letters</label>
+        <div class="form-control">
+          <p-inputNumber
+            [showButtons]="true"
+            [min]="2"
+            [max]="32"
+            buttonLayout="horizontal"
+            formControlName="countLetters"
+          ></p-inputNumber>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <h3>Pattern:</h3>
+      <div class="letters">
+        @if(form.get('countLetters') && letters.length > 0) { @for(letter of
+        letters; track letter) {
+        <div class="letter">
+          <input
+            pInputText
+            type="text"
+            maxlength="1"
+            [ngModel]="letter"
+            [ngModelOptions]="{ standalone: true }"
+            (ngModelChange)="changeLetter($event, $index)"
+          />
+        </div>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="hr" ></div>
+    <div class="form-row">
+      <div class="form-field">
+        <div>Include Letters(if need)</div>
+        <p-button
+          label="Uncheck All"
+          size="small"
+          [outlined]="true"
+          severity="help"
+          (click)="uncheckAllIncludedLetters()"
+        ></p-button>
+      </div>
+    </div>
+    <div class="form-field">
+      @if(includeLetters) {
+
+        <div class="exclude-letters">
+          @for(letter of includeLetters | keyvalue; track letter.key) {
+            <div class="exclude-letter">
+              <p-button
+                [label]="letter.key"
+                [outlined]="!letter.value"
+                [severity]="letter.value ? 'success' : 'secondary'"
+                (click)="toggleIncludeLetter(letter.key)"
+              ></p-button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="hr" ></div>
+    <div class="form-row">
+      <div class="form-field">
+        <div>Exclude Letters(if need)</div>
+        <p-button
+          label="Uncheck All"
+          size="small"
+          [outlined]="true"
+          severity="help"
+          (click)="uncheckAllExcludedLetters()"
+        ></p-button>
+      </div>
+    </div>
+    <div class="form-field">
+      @if(excludeLetters) {
+
+      <div class="exclude-letters">
+        @for(letter of excludeLetters | keyvalue; track letter.key) {
+        <div class="exclude-letter">
+          <p-button
+            [label]="letter.key"
+            [outlined]="!letter.value"
+            [severity]="letter.value ? 'danger' : 'secondary'"
+            (click)="toggleExcludeLetter(letter.key)"
+          ></p-button>
+        </div>
+        }
+      </div>
+      }
+    </div>
+
+
+    <div class="hr" ></div>
+
+    <div class="form-field form-field--center">
+      <p-button
+        label="Ask from GPT"
+        [disabled]="!form.valid"
+        (click)="onSubmit()"
+      ></p-button>
+    </div>
+  </form>
+</div>
+
+@if(error$ | async; as error) {
+  <div class="error">{{ error }}</div>
+} @else {
+  <div class="result">
+    <h2>Answer:</h2>
+    <div class="answer" *ngIf="result$ | async as result">{{result}}</div>
+  </div>
+}
+
+
