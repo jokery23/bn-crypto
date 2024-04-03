@@ -1,8 +1,8 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { GptService } from '../services/gpt.service';
+import { GptService } from '../../services';
 
-export const openIaApiGuard: CanActivateFn = (route, state) => {
+export const openAiApiGuard: CanActivateFn = (route, state) => {
   const gptService = inject(GptService);
   const routerService = inject(Router);
 

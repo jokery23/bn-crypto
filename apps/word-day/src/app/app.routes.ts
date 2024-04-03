@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { openIaApiGuard } from './guards/openia-api.guard';
+import { openAiApiGuard } from '@binance/core';
 
 export const appRoutes: Route[] = [
   {
@@ -9,7 +9,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'guess-word',
-    canActivate: [openIaApiGuard],
+    canActivate: [openAiApiGuard],
     loadComponent: () =>
       import('@binance/guess-word').then((m) => m.GuessWordComponent),
   },

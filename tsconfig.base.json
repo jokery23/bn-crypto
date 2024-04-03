@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@binance/core": ["libs/core/src/index.ts"],
       "@binance/guess-word": ["libs/guess-word/src/index.ts"]
     }
   },

@@ -7,7 +7,7 @@ enum GptModelEnums {
   GPT_4 = 'gpt-4',
 }
 
-const STORAGE_KEY = '__open_ia_key__';
+const STORAGE_KEY = '__open_ai_key__';
 
 @Injectable({
   providedIn: 'root',

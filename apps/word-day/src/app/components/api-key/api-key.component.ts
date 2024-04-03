@@ -11,7 +11,7 @@ import {
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { GptService } from '../../services/gpt.service';
+import { GptService } from '@binance/core';
 
 @Component({
   selector: 'app-api-key',

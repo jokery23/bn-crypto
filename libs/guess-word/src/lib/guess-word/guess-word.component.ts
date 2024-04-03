@@ -15,7 +15,7 @@ import { InputOtpModule } from 'primeng/inputotp';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ButtonModule } from 'primeng/button';
 import { BehaviorSubject } from 'rxjs';
-import { GptService } from '../../../../../apps/word-day/src/app/services/gpt.service';
+import { GptService } from '@binance/core';
 
 @Component({
   standalone: true,
