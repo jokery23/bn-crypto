@@ -114,12 +114,12 @@ export class GuessWordComponent implements OnInit {
 
     const context = this.form.get('context')?.value;
     const countLetters = this.form.get('countLetters')?.value;
-    const excludedLetters = Object.keys(this.excludeLetters)
-      .filter((letter) => this.excludeLetters[letter])
-      .join(', ');
-    const includedLetters = Object.keys(this.includeLetters)
-      .filter((letter) => this.includeLetters[letter])
-      .join(', ');
+    const excludedLetters = Object.keys(this.excludeLetters).filter(
+      (letter) => this.excludeLetters[letter]
+    );
+    const includedLetters = Object.keys(this.includeLetters).filter(
+      (letter) => this.includeLetters[letter]
+    );
     const pattern = this.letters
       .map((letter) => (letter ? letter : '*'))
       .join('');
@@ -128,22 +128,73 @@ export class GuessWordComponent implements OnInit {
       `create a list of ${countLetters}-letter words(20 variants) that fit the '${pattern}' pattern`,
     ];
 
-    if (includedLetters) {
-      messages.push(`include ${includedLetters} letters`);
+    if (includedLetters.length) {
+      messages.push(`include ${includedLetters.join(', ')} letters`);
     }
 
-    if (excludedLetters) {
-      messages.push(`exclude ${excludedLetters} letters`);
+    if (excludedLetters.length) {
+      messages.push(`exclude ${excludedLetters.join(', ')} letters`);
     }
 
     messages.push(` especially within the context ${context}`);
 
     try {
       const result = await this.gptService.ask(messages.join(', '));
-      this.result$.next(result);
+      const correctWords = this.getCorrectWords(
+        result,
+        includedLetters,
+        excludedLetters
+      );
+
+      this.result$.next(
+        `Correct words:\n ${correctWords?.join(
+          `\n`
+        )} \n\n All words:\n\n ${result}`
+      );
     } catch (error) {
       // check that the key is correct
       this.error$.next(error as string);
     }
+  }
+
+  getCorrectWords(
+    result: string | null,
+    includedLetters: string[],
+    excludedLetters: string[]
+  ): string[] {
+    const words = result?.split('\n').filter((word) => word);
+
+    const correctWords = words?.filter((word) => {
+      if (includedLetters.length) {
+        const correctLetters = includedLetters.filter((letter) => {
+          return word.includes(letter);
+        });
+
+        if (!correctLetters.length) {
+          return false;
+        }
+      }
+
+      if (excludedLetters.length) {
+        for (let i = 0; i < word.length; i++) {
+          if (this.excludeLetters[word[i]]) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    });
+
+    return correctWords ? this.getFiltered(correctWords) : [];
+  }
+
+  getFiltered(words: string[]): string[] {
+    const pattern = this.letters
+      .map((letter) => (letter ? letter : `\\S`))
+      .join('');
+    const re = new RegExp(`${pattern}`, 'i');
+
+    return words.filter((word) => re.test(word));
   }
 }
