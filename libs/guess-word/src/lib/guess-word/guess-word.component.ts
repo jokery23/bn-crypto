@@ -16,6 +16,7 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ButtonModule } from 'primeng/button';
 import { BehaviorSubject } from 'rxjs';
 import { GptService } from '@binance/core';
+import { consoleJsCommand } from './helpers';
 
 @Component({
   standalone: true,
@@ -41,6 +42,8 @@ export class GuessWordComponent implements OnInit {
   includeLetters: Record<string, boolean> = {};
   result$ = new BehaviorSubject<string | null>(null);
   error$ = new BehaviorSubject<string | null>(null);
+
+  private defaultDescription = 'Web3 Gaming';
 
   constructor(private fb: FormBuilder, private gptService: GptService) {
     this.form = this.createForm();
@@ -69,7 +72,7 @@ export class GuessWordComponent implements OnInit {
         Validators.required,
         Validators.min(2),
       ]),
-      context: new FormControl('Bitcoin Halving 2024', [Validators.required]),
+      context: new FormControl(this.defaultDescription),
     });
   }
 
@@ -128,15 +131,29 @@ export class GuessWordComponent implements OnInit {
       `create a list of ${countLetters}-letter words(20 variants) that fit the '${pattern}' pattern`,
     ];
 
+    const jsLog = consoleJsCommand(countLetters);
+
     if (includedLetters.length) {
       messages.push(`include ${includedLetters.join(', ')} letters`);
     }
 
-    if (excludedLetters.length) {
-      messages.push(`exclude ${excludedLetters.join(', ')} letters`);
+    if (includedLetters.length || this.letters.length) {
+      jsLog.setIncludedLetters([
+        ...includedLetters,
+        ...this.letters.filter(Boolean),
+      ]);
     }
 
-    messages.push(` especially within the context ${context}`);
+    if (excludedLetters.length) {
+      messages.push(`exclude ${excludedLetters.join(', ')} letters`);
+      jsLog.setExcludedLetters(excludedLetters);
+    }
+
+    if (context) {
+      messages.push(` especially within the context ${context}`);
+    }
+
+    console.log(jsLog.createString());
 
     try {
       const result = await this.gptService.ask(messages.join(', '));
@@ -190,6 +207,7 @@ export class GuessWordComponent implements OnInit {
   }
 
   getFiltered(words: string[]): string[] {
+    // temp1.textContent.split(/\s+/).filter((v) => v.length === 5 && new RegExp(`c\S\S\S\S`, 'i').test(v));
     const pattern = this.letters
       .map((letter) => (letter ? letter : `\\S`))
       .join('');
